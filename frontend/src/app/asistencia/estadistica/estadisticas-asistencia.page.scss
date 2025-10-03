@@ -1,0 +1,7 @@
+.stats-root { padding:18px; font-family: Inter, Arial, sans-serif; background:#f7f8fb; min-height:100vh; }
+header h2 { margin:0 0 6px 0; }
+header .muted { color:#6b7280; font-size:13px; }
+.cards { display:flex; gap:12px; margin-top:14px; }
+.card { background:#fff; padding:14px; border-radius:12px; flex:1; text-align:center; box-shadow:0 6px 18px rgba(2,6,23,.04); }
+.card .label { color:#6b7280; font-size:13px; }
+.card .value { font-weight:700; font-size:20px; margin-top:8px; }

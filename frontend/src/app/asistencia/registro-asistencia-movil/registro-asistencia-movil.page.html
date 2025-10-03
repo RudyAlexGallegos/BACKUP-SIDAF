@@ -1,0 +1,73 @@
+<main class="control-asistencia">
+  <header class="header">
+    <div>
+      <h1>Control de Asistencia</h1>
+      <p class="muted">{{ hoyKey | date:'fullDate' }}</p>
+    </div>
+    <div class="actions">
+      <button class="btn" (click)="undo()">Deshacer</button>
+      <button class="btn" (click)="exportCSV()">Exportar CSV</button>
+    </div>
+  </header>
+
+  <section class="filters">
+    <input type="search" placeholder="Buscar árbitro..." [(ngModel)]="searchTerm" />
+    <div class="dates">
+      <label>Desde <input type="text" placeholder="dd/mm/aaaa" /></label>
+      <label>Hasta <input type="text" placeholder="dd/mm/aaaa" /></label>
+    </div>
+    <div class="bulk">
+      <button class="btn" (click)="markAll()">Marcar todos</button>
+      <button class="btn" (click)="unmarkAll()">Desmarcar todos</button>
+    </div>
+  </section>
+
+  <section class="list">
+    <div *ngFor="let a of filteredList()" class="card">
+      <div class="left">
+        <!-- Avatar / iniciales -->
+        <ng-container *ngIf="a.avatar && a.avatar !== ''">
+          <img class="avatar" [src]="a.avatar" alt="{{ a.nombre }} avatar" />
+        </ng-container>
+        <ng-container *ngIf="!a.avatar || a.avatar === ''">
+          <div class="avatar initials">
+            {{ (a.nombre ? a.nombre.charAt(0) : '') + (a.apellido ? a.apellido.charAt(0) : '') }}
+          </div>
+        </ng-container>
+
+        <!-- Información detallada (cada dato en su línea) -->
+        <div class="info">
+          <div class="name">{{ a.nombre }} <span class="apellido" *ngIf="a.apellido">{{ a.apellido }}</span></div>
+
+          <div class="contact-line" *ngIf="a.email">
+            <span class="email">{{ a.email }}</span>
+          </div>
+
+          <div class="contact-line" *ngIf="a.telefono">
+            <span class="phone">{{ a.telefono }}</span>
+          </div>
+
+          <div class="meta-line">
+            <span class="category" *ngIf="a.categoria">{{ a.categoria }}</span>
+            <span *ngIf="a.categoria && a.cargo"> · </span>
+            <span class="role" *ngIf="a.cargo">{{ a.cargo }}</span>
+          </div>
+
+          <div class="avail-line">
+            <span class="available">{{ a.disponible ? 'Disponible' : 'No disponible' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="status">{{ svc.hasAttendance(a.id, hoyKey) ? 'Presente' : 'Ausente' }}</div>
+        <div class="buttons">
+          <button *ngIf="svc.hasAttendance(a.id, hoyKey)" (click)="unmark(a.id)" class="btn outline">Desmarcar</button>
+          <button *ngIf="!svc.hasAttendance(a.id, hoyKey)" (click)="mark(a.id)" class="btn primary">Marcar</button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!filteredList().length" class="empty">No hay árbitros que coincidan.</div>
+  </section>
+</main>

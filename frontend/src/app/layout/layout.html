@@ -1,0 +1,106 @@
+
+<!-- Google Fonts: Montserrat -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+<div class="layout-container" style="display: flex; min-height: 100vh; font-family: 'Montserrat', Arial, sans-serif;">
+		<!-- Sidebar -->
+		<aside class="sidebar" style="width: 270px; background: #fff; border-right: 1px solid #e5e7eb; display: flex; flex-direction: column; font-family: 'Montserrat', Arial, sans-serif;">
+			<div style="display: flex; align-items: center; gap: 1rem; padding: 1.2rem 1.5rem; border-bottom: 1px solid #e5e7eb;">
+				   <img src="assets/logo.jpg" alt="Logo SIDAF PUNO" style="height: 44px; width: 44px; border-radius: 0.75rem; object-fit: cover;" />
+				<div>
+					<div style="font-size: 1.15rem; font-weight: bold; color: #0f172a;">SIDAF PUNO</div>
+					<div style="font-size: 0.85rem; color: #64748b;">Comisión Departamental de Árbitros</div>
+				</div>
+			</div>
+			<nav style="flex: 1; overflow-y: auto; padding: 1.2rem 0.5rem 0.5rem 0.5rem;">
+				<!-- Gestión de Árbitros -->
+				<div style="margin-bottom: 1.2rem;">
+					<div style="font-size: 0.78rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin: 0.5rem 0 0.2rem 1.2rem;">Gestión de Árbitros</div>
+					<ul style="list-style: none; padding: 0; margin: 0;">
+						<li>
+							<a routerLink="/arbitros" routerLinkActive="active" style="display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 1.2rem; border-radius: 0.5rem; color: #334155; text-decoration: none; font-weight: 500; transition: background 0.2s;">
+								<svg width="20" height="20" fill="none" viewBox="0 0 24 24" style="color: #2563eb;"><path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4Zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4Z"/></svg>
+								Ver Árbitros
+							</a>
+						</li>
+						<li>
+							<a routerLink="/arbitros/nuevo" routerLinkActive="active" style="display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 1.2rem; border-radius: 0.5rem; color: #2563eb; text-decoration: none; font-weight: 500; transition: background 0.2s;">
+								<svg width="20" height="20" fill="none" viewBox="0 0 24 24" style="color: #2563eb;"><path fill="currentColor" d="M12 5v14m7-7H5" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/></svg>
+								Nuevo Árbitro
+							</a>
+						</li>
+					</ul>
+				</div>
+				<!-- Asistencia -->
+				<div style="margin-bottom: 1.2rem;">
+					<div style="font-size: 0.78rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin: 0.5rem 0 0.2rem 1.2rem;">Asistencia</div>
+					<ul style="list-style: none; padding: 0; margin: 0;">
+						<li>
+							<a routerLink="/asistencia" routerLinkActive="active" style="display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 1.2rem; border-radius: 0.5rem; color: #059669; text-decoration: none; font-weight: 500; transition: background 0.2s;">
+								<svg width="20" height="20" fill="none" viewBox="0 0 24 24" style="color: #059669;"><path fill="currentColor" d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2Zm0 18H5V8h14v13Zm-7-3c-2.21 0-4-1.79-4-4h2a2 2 0 1 0 4 0h2c0 2.21-1.79 4-4 4Z"/></svg>
+								Pasar Asistencia
+							</a>
+						</li>
+						<li>
+							<a routerLink="/asistencia/estadisticas" routerLinkActive="active" style="display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 1.2rem; border-radius: 0.5rem; color: #059669; text-decoration: none; font-weight: 500; transition: background 0.2s;">
+								<svg width="20" height="20" fill="none" viewBox="0 0 24 24" style="color: #059669;"><path fill="currentColor" d="M3 17h2v-7H3v7Zm4 0h2v-4H7v4Zm4 0h2v-10h-2v10Zm4 0h2v-2h-2v2Z"/></svg>
+								Estadísticas
+							</a>
+						</li>
+					</ul>
+				</div>
+				<!-- Designaciones -->
+				<div style="margin-bottom: 1.2rem;">
+					<div style="font-size: 0.78rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin: 0.5rem 0 0.2rem 1.2rem;">Designaciones</div>
+					<ul style="list-style: none; padding: 0; margin: 0;">
+						<li>
+							<a routerLink="/designaciones/nueva" routerLinkActive="active" style="display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 1.2rem; border-radius: 0.5rem; color: #eab308; text-decoration: none; font-weight: 500; transition: background 0.2s;">
+								<svg width="20" height="20" fill="none" viewBox="0 0 24 24" style="color: #eab308;"><path fill="currentColor" d="M12 5v14m7-7H5" stroke="#eab308" stroke-width="2" stroke-linecap="round"/></svg>
+								NUEVA DESIGANCIÓN
+							</a>
+						</li>
+						<li>
+							<a routerLink="/designaciones" routerLinkActive="active" style="display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 1.2rem; border-radius: 0.5rem; color: #eab308; text-decoration: none; font-weight: 500; transition: background 0.2s;">
+								<svg width="20" height="20" fill="none" viewBox="0 0 24 24" style="color: #eab308;"><path fill="currentColor" d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2Zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1Zm0 16c-2.21 0-4-1.79-4-4h2a2 2 0 1 0 4 0h2c0 2.21-1.79 4-4 4Zm5-8-1.41 1.41-4.59-4.58-2.59 2.58L7 9l4-4 6 6Z"/></svg>
+								Ver Designaciones
+							</a>
+						</li>
+					</ul>
+				</div>
+				<!-- Campeonatos -->
+				<div style="margin-bottom: 1.2rem;">
+					<div style="font-size: 0.78rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin: 0.5rem 0 0.2rem 1.2rem;">Campeonatos</div>
+					<ul style="list-style: none; padding: 0; margin: 0;">
+						<li>
+							<a routerLink="/campeonatos" routerLinkActive="active" style="display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 1.2rem; border-radius: 0.5rem; color: #f59e42; text-decoration: none; font-weight: 500; transition: background 0.2s;">
+								<svg width="20" height="20" fill="none" viewBox="0 0 24 24" style="color: #f59e42;"><path fill="currentColor" d="M17 3H7v2H2v2c0 3.31 2.69 6 6 6h1v2.09c-2.39.49-4 2.5-4 4.91V21h14v-2.09c0-2.41-1.61-4.42-4-4.91V13h1c3.31 0 6-2.69 6-6V5h-5V3Zm-5 10c-2.21 0-4-1.79-4-4V5h8v4c0 2.21-1.79 4-4 4Z"/></svg>
+								Campeonatos
+							</a>
+						</li>
+						<li>
+							<a routerLink="/reportes" routerLinkActive="active" style="display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 1.2rem; border-radius: 0.5rem; color: #ef4444; text-decoration: none; font-weight: 500; transition: background 0.2s;">
+								<svg width="20" height="20" fill="none" viewBox="0 0 24 24" style="color: #ef4444;"><path fill="currentColor" d="M3 17h2v-7H3v7Zm4 0h2v-4H7v4Zm4 0h2v-10h-2v10Zm4 0h2v-2h-2v2Z"/></svg>
+								Reportes PDF
+							</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+			<div style="padding: 1.2rem; border-top: 1px solid #e5e7eb;">
+				<button style="display: flex; align-items: center; gap: 0.7rem; color: #334155; background: #f8fafc; border: none; border-radius: 0.5rem; padding: 0.7rem 1.2rem; font-size: 1rem; font-weight: 500; width: 100%; margin-bottom: 0.5rem; transition: background 0.2s;">
+					<svg width="18" height="18" fill="none" viewBox="0 0 24 24" style="color: #6366f1;"><path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2Zm0 16H5V5h14v14Zm-7-3c-2.21 0-4-1.79-4-4h2a2 2 0 1 0 4 0h2c0 2.21-1.79 4-4 4Z"/></svg>
+					Reglamentos
+				</button>
+				<button style="display: flex; align-items: center; gap: 0.7rem; color: #334155; background: #f8fafc; border: none; border-radius: 0.5rem; padding: 0.7rem 1.2rem; font-size: 1rem; font-weight: 500; width: 100%; transition: background 0.2s;">
+					<svg width="18" height="18" fill="none" viewBox="0 0 24 24" style="color: #6366f1;"><path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-2h2v2Zm0-4h-2V7h2v6Z"/></svg>
+					Evaluación
+				</button>
+			</div>
+		</aside>
+
+	<!-- Main content -->
+	<main style="flex: 1; background: #f4f6fa; min-height: 100vh;">
+		<router-outlet></router-outlet>
+		<app-toaster></app-toaster>
+	</main>
+</div>

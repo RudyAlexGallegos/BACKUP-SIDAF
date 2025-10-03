@@ -1,0 +1,60 @@
+<main class="asistencia-page">
+  <header class="page-header">
+    <div>
+      <h1>Control de Asistencia</h1>
+      <p class="date muted">{{ hoy | date: 'fullDate' }}</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn ghost" (click)="undoLast()" [disabled]="!lastAction" aria-label="Deshacer">Deshacer</button>
+      <button class="btn ghost" (click)="exportCsvRange()" aria-label="Exportar CSV">Exportar CSV</button>
+    </div>
+  </header>
+
+  <section class="filters">
+    <input type="search" placeholder="Buscar árbitro..." [(ngModel)]="sharedSearchTerm" aria-label="Buscar árbitro" class="search" />
+
+    <div class="date-range">
+      <label>
+        Desde
+        <input type="date" [(ngModel)]="filterFrom" />
+      </label>
+      <label>
+        Hasta
+        <input type="date" [(ngModel)]="filterTo" />
+      </label>
+    </div>
+
+    <div class="bulk-actions">
+      <button class="btn primary" (click)="bulkMarkAll(true)" aria-label="Marcar todos">Marcar todos</button>
+      <button class="btn warn" (click)="bulkMarkAll(false)" aria-label="Desmarcar todos">Desmarcar todos</button>
+    </div>
+  </section>
+
+  <section class="list">
+    <ng-container *ngIf="(filteredList() || []).length; else empty">
+      <ul class="cards" role="list">
+        <li *ngFor="let a of filteredList(); trackBy: trackBy" class="card" role="listitem">
+          <div class="meta">
+            <div class="name">{{ a.nombre }} <span class="apellido">{{ a.apellido }}</span></div>
+            <div class="role muted">{{ a.especialidad || '—' }}</div>
+          </div>
+
+          <div class="controls">
+            <span class="badge" [class.present]="hasAttendance(a.id)" [class.absent]="!hasAttendance(a.id)">
+              {{ hasAttendance(a.id) ? 'Presente' : 'Ausente' }}
+            </span>
+
+            <div class="buttons">
+              <button *ngIf="!hasAttendance(a.id)" class="btn primary" (click)="mark(a.id)">Marcar</button>
+              <button *ngIf="hasAttendance(a.id)" class="btn outline" (click)="unmark(a.id)">Desmarcar</button>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </ng-container>
+
+    <ng-template #empty>
+      <div class="empty">No se encontraron árbitros que coincidan.</div>
+    </ng-template>
+  </section>
+</main>

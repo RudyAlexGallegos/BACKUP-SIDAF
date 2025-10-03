@@ -1,0 +1,169 @@
+<div class="nuevo-arbitro-container">
+  <header class="nuevo-arbitro-header" style="display:flex;align-items:center;gap:12px;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button type="button" class="btn-back" (click)="onCancel()">&larr; Volver</button>
+      <div class="header-text">
+        <h1 style="margin:0">{{ isEdit ? 'Editar árbitro' : 'Nuevo árbitro' }}</h1>
+        <p class="muted" style="margin:0">{{ isEdit ? 'Modifica los datos del árbitro' : 'Introduce los datos básicos para registrar un árbitro' }}</p>
+      </div>
+    </div>
+  </header>
+
+  <form [formGroup]="arbitroForm" (ngSubmit)="onSubmit()" class="nuevo-arbitro-form" novalidate>
+    <div style="display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:start">
+      <!-- Avatar / upload -->
+      <aside style="text-align:center">
+        <div style="width:160px;height:160px;margin:0 auto;border-radius:12px;overflow:hidden;background:#f3f4f6;display:flex;align-items:center;justify-content:center">
+          <img [src]="avatarPreview || generateInitialsAvatar(arbitroForm.get('nombre')?.value, arbitroForm.get('apellido')?.value)" alt="Avatar" style="width:100%;height:100%;object-fit:cover" />
+        </div>
+        <input id="avatarInput" class="hidden-input" type="file" accept="image/*" (change)="onAvatarSelected($event)" aria-label="Subir foto de árbitro" />
+        <label for="avatarInput" class="btn-upload" style="display:inline-block;margin-top:8px">Subir foto</label>
+        <div class="small muted" style="margin-top:6px">Foto opcional</div>
+        <!-- Disponible toggle moved here as requested -->
+        <div style="margin-top:10px">
+          <label for="disponible" style="display:block;margin-bottom:6px">Disponible</label>
+          <label class="switch">
+            <input id="disponible" type="checkbox" formControlName="disponible" [disabled]="isSubmitting" />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </aside>
+
+      <!-- Fields grouped into sections -->
+      <div>
+        <div style="font-size:13px;color:#6b7280;margin-bottom:10px">Los campos marcados con * son obligatorios.</div>
+        <!-- PERSONAL -->
+        <fieldset style="border:0;padding:0;margin:0 0 12px 0">
+          <legend style="font-weight:600;margin-bottom:8px">Personal</legend>
+          <div style="display:flex;gap:12px;margin-bottom:8px">
+            <div style="flex:1">
+              <label for="nombre">Nombre *</label>
+              <input id="nombre" formControlName="nombre" type="text" placeholder="Ej. Juan" [class.invalid]="arbitroForm.get('nombre')?.invalid && arbitroForm.get('nombre')?.touched" autofocus [disabled]="isSubmitting" />
+              <div class="error" *ngIf="arbitroForm.get('nombre')?.invalid && arbitroForm.get('nombre')?.touched">El nombre es obligatorio</div>
+            </div>
+            <div style="flex:1">
+              <label for="apellido">Apellido *</label>
+              <input id="apellido" formControlName="apellido" type="text" placeholder="Ej. Pérez" [class.invalid]="arbitroForm.get('apellido')?.invalid && arbitroForm.get('apellido')?.touched" [disabled]="isSubmitting" />
+              <div class="error" *ngIf="arbitroForm.get('apellido')?.invalid && arbitroForm.get('apellido')?.touched">El apellido es obligatorio</div>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- CONTACTO -->
+        <fieldset style="border:0;padding:0;margin:0 0 12px 0">
+          <legend style="font-weight:600;margin-bottom:8px">Contacto</legend>
+          <div style="display:flex;gap:12px;margin-bottom:8px">
+            <div style="flex:1">
+              <label for="email">Email</label>
+              <input id="email" formControlName="email" type="email" placeholder="correo@ejemplo.com" [class.invalid]="arbitroForm.get('email')?.invalid && arbitroForm.get('email')?.touched" [disabled]="isSubmitting" />
+              <div class="error" *ngIf="arbitroForm.get('email')?.invalid && arbitroForm.get('email')?.touched">Email inválido</div>
+            </div>
+            <div style="width:180px">
+              <label for="telefono">Teléfono</label>
+              <input id="telefono" formControlName="telefono" type="text" placeholder="999-999-999" (blur)="formatPhone()" [disabled]="isSubmitting" />
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- FORMACIÓN / PROFESIÓN -->
+        <fieldset style="border:0;padding:0;margin:0 0 12px 0">
+          <legend style="font-weight:600;margin-bottom:8px">Formación / Profesión</legend>
+          <div style="display:flex;gap:12px;margin-bottom:8px">
+            <div style="flex:1">
+              <label for="gradoInstruccion">Grado / nivel de instrucción</label>
+              <select id="gradoInstruccion" formControlName="gradoInstruccion" [disabled]="isSubmitting" style="width:100%">
+                <option value="">Selecciona nivel</option>
+                <option *ngFor="let g of gradoOptions" [value]="g">{{ g }}</option>
+              </select>
+            </div>
+            <div style="flex:1">
+              <label for="profesion">Profesión / ocupación</label>
+              <select id="profesion" formControlName="profesion" [disabled]="isSubmitting" style="width:100%">
+                <option value="">Selecciona profesión</option>
+                <option *ngFor="let p of profesionOptions" [value]="p">{{ p }}</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px">
+            <div style="flex:1">
+              <label for="fechaNacimiento">Fecha de nacimiento</label>
+              <input id="fechaNacimiento" formControlName="fechaNacimiento" type="date" [disabled]="isSubmitting" />
+            </div>
+            <div style="flex:1">
+              <label for="idiomas">Idiomas</label>
+              <div class="dropdown" style="position:relative;">
+                <button type="button" class="dropdown-toggle" [attr.aria-expanded]="idiomasOpen" (click)="idiomasOpen = !idiomasOpen" [disabled]="isSubmitting" style="width:100%;text-align:left;padding:0.55rem 0.9rem;border:1px solid var(--border,#e6eef8);background:var(--bg,#fbfdff);border-radius:0.5rem">
+                  <span *ngIf="(arbitroForm.get('idiomas')?.value?.length) as s">{{ (arbitroForm.get('idiomas')?.value).join(', ') }}</span>
+                  <span *ngIf="!(arbitroForm.get('idiomas')?.value?.length)">Selecciona uno o más idiomas</span>
+                </button>
+                <div *ngIf="idiomasOpen" class="dropdown-menu" style="position:absolute;left:0;right:0;top:calc(100% + 6px);background:#fff;border:1px solid rgba(2,6,23,0.06);box-shadow:0 8px 24px rgba(2,6,23,0.06);border-radius:8px;padding:8px;z-index:40">
+                  <label *ngFor="let i of idiomasOptions" style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer">
+                    <input type="checkbox" [checked]="isIdiomaSelected(i)" (change)="toggleIdioma(i)" [disabled]="isSubmitting" />
+                    <span>{{ i }}</span>
+                  </label>
+                </div>
+              </div>
+              <div class="hint">Selecciona uno o más idiomas</div>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- ARBITRAJE (categoría, experiencia, etc) -->
+        <fieldset style="border:0;padding:0;margin:0 0 12px 0">
+          <legend style="font-weight:600;margin-bottom:8px">Arbitraje</legend>
+          <div style="display:flex;gap:12px;margin-bottom:8px">
+            <div style="flex:1">
+              <label for="categoria">Categoría *</label>
+              <select id="categoria" formControlName="categoria" [class.invalid]="arbitroForm.get('categoria')?.invalid && arbitroForm.get('categoria')?.touched" [disabled]="isSubmitting">
+                <option value="">Selecciona categoría</option>
+                <option *ngFor="let cat of categorias" [value]="cat.value">{{cat.label}}</option>
+              </select>
+            </div>
+            <div style="flex:1">
+              <label for="especialidad">Especialidad *</label>
+              <select id="especialidad" formControlName="especialidad" [class.invalid]="arbitroForm.get('especialidad')?.invalid && arbitroForm.get('especialidad')?.touched" [disabled]="isSubmitting">
+                <option value="">Selecciona especialidad</option>
+                <option *ngFor="let e of especialidades" [value]="e.value">{{e.label}}</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:center">
+            <div style="flex:1">
+              <label for="fechaInicio">Fecha de inicio en arbitraje</label>
+              <input id="fechaInicio" formControlName="fechaInicio" type="date" [disabled]="isSubmitting" />
+              <div class="hint">Se usa para calcular años en arbitraje</div>
+            </div>
+            <div style="width:160px">
+              <label for="experiencia">Experiencia (años)</label>
+              <!-- experiencia is computed from fechaInicio; make readonly so user cannot type it directly -->
+              <input id="experiencia" formControlName="experiencia" type="number" min="1" max="50" [disabled]="isSubmitting" readonly />
+              <div class="hint">Calculado automáticamente desde la fecha de inicio</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:center;margin-top:8px">
+            <div style="flex:1">
+              <label for="nivelPreparacion">Nivel de preparación: <strong>{{ arbitroForm.get('nivelPreparacion')?.value }}%</strong></label>
+              <input id="nivelPreparacion" formControlName="nivelPreparacion" type="range" min="0" max="100" [disabled]="isSubmitting" />
+            </div>
+            <!-- 'Disponible' moved under avatar -->
+          </div>
+        </fieldset>
+
+        <!-- acciones al final para mantener consistencia -->
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:6px">
+          <button type="button" class="btn btn-ghost" (click)="onCancel()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="isSubmitting || arbitroForm.invalid">{{ isEdit ? 'Guardar cambios' : 'Crear árbitro' }}</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- overlay simple -->
+  <div class="overlay" *ngIf="isSubmitting" aria-hidden="true" style="margin-top:12px">
+    <div class="overlay-content">
+      <div class="spinner"></div>
+      <div class="muted">Guardando árbitro...</div>
+    </div>
+  </div>
+</div>
+

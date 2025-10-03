@@ -1,0 +1,21 @@
+<div class="stats-root">
+  <header>
+    <h2>Estadísticas de Asistencia</h2>
+    <p class="muted">{{ hoy | date:'fullDate' }}</p>
+  </header>
+
+  <section class="cards">
+    <div class="card">
+      <div class="label">Presentes</div>
+      <div class="value">{{ presentes }}</div>
+    </div>
+    <div class="card">
+      <div class="label">Total árbitros</div>
+      <div class="value">{{ total }}</div>
+    </div>
+    <div class="card">
+      <div class="label">Porcentaje</div>
+      <div class="value">{{ porcentaje }}%</div>
+    </div>
+  </section>
+</div>

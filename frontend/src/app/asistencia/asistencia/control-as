@@ -1,0 +1,73 @@
+istencia.page.ts
+import { Component, OnInit } from '@angular/core';
+import { AsistenciaService, Arbitro } from '../services/asistencia.service';
+import { exportToCsv } from '../utils/csv';
+
+@Component({
+  selector: 'app-control-asistencia',
+  templateUrl: './control-asistencia.page.html',
+  styleUrls: ['./control-asistencia.page.scss']
+})
+export class ControlAsistenciaPage implements OnInit {
+  hoy = new Date();
+  arbitros: Arbitro[] = [];
+  sharedSearchTerm = '';
+  filterFrom?: Date;
+  filterTo?: Date;
+  lastAction: any = null;
+
+  constructor(private svc: AsistenciaService) {}
+
+  ngOnInit(): void {
+    this.arbitros = this.svc.getArbitros();
+  }
+
+  filteredList(): Arbitro[] {
+    const term = (this.sharedSearchTerm || '').toLowerCase().trim();
+    const list = this.arbitros.filter(a => (`${a.nombre} ${a.apellido} ${a.especialidad||''}`).toLowerCase().includes(term));
+    return list;
+  }
+
+  hasAttendance(aid: string): boolean {
+    return this.svc.hasAttendance(aid, this.svc.todayKey(this.hoy));
+  }
+
+  mark(aid: string) {
+    const dateKey = this.svc.todayKey(this.hoy);
+    this.svc.mark(aid, dateKey, true);
+    this.lastAction = { type: 'mark', ids: [aid], date: dateKey };
+  }
+
+  unmark(aid: string) {
+    const dateKey = this.svc.todayKey(this.hoy);
+    this.svc.unmark(aid, dateKey);
+    this.lastAction = { type: 'unmark', ids: [aid], date: dateKey };
+  }
+
+  bulkMarkAll(presente = true) {
+    const ids = this.filteredList().map(x=>x.id);
+    const dateKey = this.svc.todayKey(this.hoy);
+    this.svc.bulkMark(ids, dateKey, presente);
+    this.lastAction = { type: 'bulk', ids, date: dateKey, presente };
+  }
+
+  undoLast() {
+    if (!this.lastAction) return;
+    const la = this.lastAction;
+    if (la.type === 'bulk' || la.type === 'mark') {
+      // remove those records for that date
+      const all = this.svc.getAllAsistencias().filter((s:any)=> !(la.ids.includes(s.arbitroId) && s.date === la.date));
+      this.svc.saveAllAsistencias(all);
+    } else if (la.type === 'unmark') {
+      // nothing stored for simple unmark undo (left simple)
+    }
+    this.lastAction = null;
+  }
+
+  exportCsvRange() {
+    const rows = this.svc.getAsistenciasInRange(this.filterFrom, this.filterTo).map(r => ({
+      id: r.id, arbitroId: r.arbitroId, date: r.date, presente: r.presente ? '1' : '0'
+    }));
+    exportToCsv('asistencias_export.csv', rows);
+  }
+}

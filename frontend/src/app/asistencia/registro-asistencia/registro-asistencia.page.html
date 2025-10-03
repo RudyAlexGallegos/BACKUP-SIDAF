@@ -1,0 +1,7 @@
+<div class="registro">
+  <h3>Registro</h3>
+  <div *ngFor="let a of arbitros" class="row">
+    <div>{{ a.nombre }} {{ a.apellido }}</div>
+    <button (click)="toggle(a.id)">{{ svc.hasAttendance(a.id) ? 'Desmarcar' : 'Marcar' }}</button>
+  </div>
+</div>

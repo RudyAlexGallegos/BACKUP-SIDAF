@@ -1,0 +1,13 @@
+<div class="p-6">
+  <h2>Nueva Designación</h2>
+  <div class="form">
+    <label>Partido</label>
+    <input [(ngModel)]="partido" class="input" />
+    <label>Fecha</label>
+    <input [(ngModel)]="fecha" type="datetime-local" class="input" />
+    <div class="actions mt-4">
+      <button class="btn btn-primary" (click)="guardar()">Guardar</button>
+      <button class="btn btn-ghost" (click)="cancelar()">Cancelar</button>
+    </div>
+  </div>
+</div>
