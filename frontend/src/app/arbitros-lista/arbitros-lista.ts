@@ -1,5 +1,3 @@
-
-
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataStoreService } from '../services/data-store.service';
@@ -87,10 +85,32 @@ export class ArbitrosLista implements OnInit   {
   /**
    * Devuelve la URL para el avatar: primero intenta la propiedad `avatar`,
    * y si no existe genera un SVG data-url con las iniciales.
+   * Ahora acepta `arbitro` nulo y maneja avatar como string o File/Blob.
    */
-  getAvatar(arbitro: Arbitro): string {
+  getAvatar(arbitro?: Arbitro | null): string {
+    if (!arbitro) {
+      // avatar por defecto (SVG con iniciales "A")
+      const svgDef = `<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'><rect width='100%' height='100%' fill='#94a3b8' rx='12' ry='12'/><text x='50%' y='55%' font-size='28' font-family='sans-serif' fill='#fff' text-anchor='middle' dominant-baseline='middle'>A</text></svg>`;
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(svgDef);
+    }
     const anyA: any = arbitro as any;
-    if (anyA.avatar) return anyA.avatar;
+    const av = anyA.avatar;
+
+    // avatar como string (data:, http(s):, blob:)
+    if (typeof av === 'string' && av.trim()) {
+      return av;
+    }
+
+    // avatar como File/Blob -> crear object URL
+    try {
+      if (av && typeof av === 'object' && (av instanceof File || av instanceof Blob)) {
+        return URL.createObjectURL(av);
+      }
+    } catch (e) {
+      // en algunos entornos av puede no ser File/Blob; ignore
+    }
+
+    // fallback: generar SVG con iniciales
     const nombre = (arbitro.nombre || '').trim();
     const apellido = (arbitro.apellido || '').trim();
     const initials = ((nombre[0] || '') + (apellido[0] || '')).toUpperCase() || 'A';
