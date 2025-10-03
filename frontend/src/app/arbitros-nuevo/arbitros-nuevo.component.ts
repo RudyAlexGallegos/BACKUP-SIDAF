@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -19,6 +18,10 @@ export class ArbitrosNuevoComponent implements OnInit {
   avatarPreview?: string | ArrayBuffer | null;
   computedInitials?: string;
 
+  // preview de la imagen seleccionada (data URL)
+  preview: string | null = null;
+  selectedFile?: File;
+
   categorias = [
     { value: 'FIFA', label: 'FIFA' },
     { value: 'Nacional', label: 'Nacional' },
@@ -35,10 +38,10 @@ export class ArbitrosNuevoComponent implements OnInit {
     { value: 'AVAR', label: 'AVAR' }
   ];
 
-  // Options for fields where user should choose, not free text
-  idiomasOptions = ['Español', 'Inglés', 'Quechua', 'Aymara', 'Portugués', 'Francés'];
-  gradoOptions = ['Sin estudio', 'Primaria', 'Secundaria', 'Técnico', 'Bachiller', 'Licenciado', 'Magíster', 'Doctor'];
-  profesionOptions = ['Profesor', 'Administrador Deportivo', 'Estudiante', 'Abogado', 'Médico', 'Ingeniero', 'Otro'];
+  // opciones de idioma (ajusta la lista según necesites)
+  idiomasOptions: string[] = ['Español', 'Inglés', 'Quechua', 'Aymara'];
+  gradoOptions = ['Primaria', 'Secundaria', 'Técnico', 'Universitario'];
+  profesionOptions = ['Docente', 'Estudiante', 'Abogado', 'Médico', 'Ingeniero', 'Otro'];
   idiomasOpen = false;
 
   constructor(private fb: FormBuilder, private router: Router, private store: DataStoreService, private route: ActivatedRoute, private toast: ToastService) {
@@ -51,7 +54,8 @@ export class ArbitrosNuevoComponent implements OnInit {
     experiencia: [1, [Validators.required, Validators.min(1), Validators.max(50)]],
     fechaNacimiento: [''],
     fechaInicio: [''],
-    idiomas: [[]], // store as array (multiple select)
+    // antes: idiomas: [[]]  (array) — ahora single-select
+    idiomas: [''],
     gradoInstruccion: [''],
     profesion: [''],
       disponible: [true],
@@ -149,7 +153,25 @@ export class ArbitrosNuevoComponent implements OnInit {
     reader.onload = () => this.avatarPreview = reader.result;
     reader.readAsDataURL(file);
   }
-  
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input?.files?.length) { this.preview = null; this.selectedFile = undefined; return; }
+    const file = input.files[0];
+    if (!file.type.startsWith('image/')) { this.preview = null; this.selectedFile = undefined; return; }
+    this.selectedFile = file;
+    const reader = new FileReader();
+    reader.onload = () => this.preview = reader.result as string;
+    reader.readAsDataURL(file);
+  }
+
+  // al enviar, incluye selectedFile en FormData:
+  buildFormData(): FormData {
+    const fd = new FormData();
+    if (this.selectedFile) fd.append('avatar', this.selectedFile, this.selectedFile.name);
+    // append resto de campos desde el form si aplica...
+    return fd;
+  }
 
   private maybeUpdateInitials() {
     // only update if user hasn't selected an uploaded avatar
@@ -185,11 +207,14 @@ export class ArbitrosNuevoComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.arbitroForm.invalid) {
-      this.arbitroForm.markAllAsTouched();
-      this.showValidationToast();
-      return;
-    }
+    if (this.arbitroForm.invalid) return;
+    const raw = this.arbitroForm.value;
+    // si el backend espera un array de idiomas, conviértelo
+    const payload = {
+      ...raw,
+      idiomas: raw.idiomas ? [raw.idiomas] : []
+    };
+    // enviar payload (o usa raw.idiomas directamente si espera string)
     if (this.isSubmitting) return;
     this.isSubmitting = true;
     const val = this.arbitroForm.value;
